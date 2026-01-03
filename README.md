@@ -1,6 +1,6 @@
 # Frontend Mentor - Weather app
 
-![Design preview for the Weather app coding challenge](./preview.jpg)
+![Design preview for the Weather app coding challenge](./src/assets/images/preview.jpg)
 
 ## Welcome! 👋
 
@@ -35,6 +35,7 @@ Your users should be able to:
 Your task is to build out the project to the designs inside the `/design` folder. You will find both a mobile and a desktop version of the design.
 
 **In your download:**
+
 - Mobile and desktop designs (JPG format)
 - All required assets in the `/assets` folder
 - Variable and static font files (or link to Google Fonts)
