@@ -10,7 +10,7 @@ const HourlyForecastCard = ({ data, loading }) => {
     >
       {data && !loading ? (
         <>
-          <div className="flex items-center gap-1 bg-red-500">
+          <div className="flex items-center gap-1">
             <div className="h-8 w-8">
               <img
                 src={weatherIcons[data.icon]}
