@@ -1,4 +1,3 @@
-
 import { formatToAmPm } from "../../../utils/dates";
 import { weatherIcons } from "../../../data/weatherCodes";
 
@@ -16,7 +15,7 @@ const HourlyForecastCard = ({ data, loading }) => {
               <img
                 src={weatherIcons[data.icon]}
                 alt="icon"
-                className="h-full w-fit"
+                className="h-full w-full object-contain"
               />
             </div>
             <p>{formatToAmPm(data.time)}</p>
