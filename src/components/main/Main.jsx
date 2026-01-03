@@ -16,7 +16,7 @@ import Loader from "../ui/Loader";
 const Main = () => {
   const {
     coords,
-    loading: locationLoading,
+    status: locationStatus,
     error: locationError,
   } = useUserLocation();
   const { unit } = useUnit();
@@ -86,7 +86,9 @@ const Main = () => {
         });
       } catch (error) {
         console.log(error);
-        setError("Something went wrong");
+        setError(
+          " We couldn't connect to the server (API error). Please try again in a few moments"
+        );
       } finally {
         setLoading(false);
       }
@@ -99,50 +101,55 @@ const Main = () => {
     setChosenSearchedLocation(location);
   };
 
-  const isInitialLoading = locationLoading;
-  const isFetchingData = loading;
-  const hasError = !!error || !!locationError;
+  const locationLoading = locationStatus === "loading";
+  const locationReady = locationStatus === "success";
+  const locationFailed = locationStatus === "error";
+
+  const apiLoading = loading;
+  const apiFailed = !!error;
+
+  const hasBlockingError = locationFailed || apiFailed;
 
   return (
     <div>
-      {/* ERROR */}
-      {hasError && <Error />}
+      {/* LOCATION LOADING (nothing else renders) */}
+      {locationLoading && <Loader />}
 
-      {/* HEADER + SEARCH (only when no error) */}
-      {!hasError && (
+      {/* LOCATION / API ERROR (nothing else renders) */}
+      {hasBlockingError && <Error message={error ?? locationError} />}
+
+      {/*  MAIN APP (ONLY after location success) */}
+      {locationReady && !hasBlockingError && (
         <>
+          {/* HEADER + SEARCH */}
           <h1 className="text-4xl sm:text-5xl font-bold font-bricolage mx-auto mt-16 sm:mt-12 flex justify-center text-center">
-            How's the sky looking today?
+            How&apos;s the sky looking today?
           </h1>
+
           <Search onLocationChoose={handleChooseLocation} />
-        </>
-      )}
 
-      {/* LOCATION LOADING */}
-      {isInitialLoading && <Loader />}
+          {/* CONTENT */}
+          <div className="flex flex-col sm:flex-row mt-6 gap-6 max-w-325 mx-auto">
+            {/* LEFT */}
+            <div className="sm:w-[70%] w-full">
+              {/* TODAY */}
+              {apiLoading || !data ? (
+                <TodayLoader />
+              ) : (
+                <Today data={data} place={place} />
+              )}
 
-      {/* MAIN CONTENT */}
-      {!hasError && !isInitialLoading && (
-        <div className="flex flex-col sm:flex-row mt-6 gap-6 max-w-325 mx-auto">
-          {/* LEFT */}
-          <div className="sm:w-[70%] w-full">
-            {/* TODAY CARD */}
-            {isFetchingData ? (
-              <TodayLoader />
-            ) : (
-              <Today data={data} place={place} />
-            )}
+              {/* CURRENT STATS */}
+              <CurrentStats data={data} loading={apiLoading || !data} />
 
-            {/* CURRENT STATS */}
-            <CurrentStats data={data} loading={isFetchingData} />
+              {/* DAILY */}
+              <DailyForecast data={data} loading={apiLoading || !data} />
+            </div>
 
-            {/* DAILY */}
-            <DailyForecast data={data} loading={isFetchingData} />
+            {/* RIGHT */}
+            <Hourly data={data} loading={apiLoading || !data} />
           </div>
-
-          {/* RIGHT — HOURLY */}
-          <Hourly data={data} loading={isFetchingData} />
-        </div>
+        </>
       )}
     </div>
   );

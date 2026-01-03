@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 
 const useUserLocation = () => {
-  const [coords, setCoords] = useState();
-  const [error, setError] = useState();
-  const [loading, setLoading] = useState(false);
+  const [coords, setCoords] = useState(null);
+  const [error, setError] = useState(null);
+  const [status, setStatus] = useState("idle");
+  // idle | loading | success | error
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLoading(true);
+    setStatus("loading");
+
     if (!navigator.geolocation) {
       setError("Geolocation is not supported");
-      setLoading(false);
+      setStatus("error");
       return;
     }
 
@@ -20,22 +22,26 @@ const useUserLocation = () => {
           lat: position.coords.latitude,
           lon: position.coords.longitude,
         });
-        setLoading(false);
+        setStatus("success");
       },
       (err) => {
-        console.log(err);
-        setError(err.message);
-        setLoading(false);
+        console.error(err);
+        if (err.code === 1) {
+          setError("Please allow location access");
+        } else {
+          setError("Error getting location");
+        }
+        setStatus("error");
       },
       {
         enableHighAccuracy: false,
-        timeout: 5000,
+        timeout: 10000,
         maximumAge: 60000,
       }
     );
   }, []);
 
-  return { coords, error, loading };
+  return { coords, error, status };
 };
 
 export default useUserLocation;
