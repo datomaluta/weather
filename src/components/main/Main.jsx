@@ -5,7 +5,6 @@ import { weatherIconMap } from "../../data/weatherCodes";
 import { useUnit } from "../../context/UnitContext";
 import Search from "./search/Search";
 import { groupHourlyByDay } from "../../utils/groupHourlyByDays";
-import Heading from "../Heading/Heading";
 import Error from "../ui/Error";
 import CurrentStats from "./current/CurrentStats";
 import DailyForecast from "./daily/DailyForecast";
@@ -112,7 +111,9 @@ const Main = () => {
       {/* HEADER + SEARCH (only when no error) */}
       {!hasError && (
         <>
-          <Heading />
+          <h1 className="text-4xl sm:text-5xl font-bold font-bricolage mx-auto mt-16 sm:mt-12 flex justify-center text-center">
+            How's the sky looking today?
+          </h1>
           <Search onLocationChoose={handleChooseLocation} />
         </>
       )}
