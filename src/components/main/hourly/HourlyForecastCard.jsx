@@ -10,8 +10,8 @@ const HourlyForecastCard = ({ data, loading }) => {
     >
       {data && !loading ? (
         <>
-          <div className="flex items-center gap-1">
-            <div className="h-8 flex justify-center">
+          <div className="flex items-center gap-1 bg-red-500">
+            <div className="h-8 w-8">
               <img
                 src={weatherIcons[data.icon]}
                 alt="icon"
@@ -20,7 +20,7 @@ const HourlyForecastCard = ({ data, loading }) => {
             </div>
             <p>{formatToAmPm(data.time)}</p>
           </div>
-          <p>{data.temp}°</p>
+          <p className="shrink-0">{data.temp}°</p>
         </>
       ) : (
         <p className="h-8"></p>
